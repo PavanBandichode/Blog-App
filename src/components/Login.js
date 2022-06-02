@@ -1,11 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { LoginURL } from "../utils/constant";
-import { useNavigate } from "react-router-dom";
-// import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
-// import { createBrowserHistory } from "history";
 import withRouter from "./withRouter";
-// const history = createBrowserHistory({ window });
+
 class Login extends React.Component {
   constructor(props) {
     super(props);

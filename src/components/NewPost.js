@@ -54,7 +54,7 @@ class NewPost extends React.Component {
       .catch((errors) => this.setState({ errors }));
   };
   render() {
-    let { title, errors, body, tagList, description } = this.state;
+    let { title, body, tagList, description } = this.state;
     return (
       <div className="container">
         <form className="new-post flex-center">
