@@ -96,6 +96,7 @@ class Home extends React.Component {
             articles={this.state.articles}
             feedNav={this.state.activeTab}
             emptyTab={this.emptyTab}
+            fetchData={this.fetchData}
           />
           <Tags addTab={this.addTab} />
         </div>

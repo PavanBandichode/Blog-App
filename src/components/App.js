@@ -1,5 +1,4 @@
 import React from "react";
-// import Hero from "./Hero";
 import Header from "./Header";
 import { Routes, Route } from "react-router-dom";
 import Login from "./Login";
@@ -13,6 +12,8 @@ import EditArticle from "./EditArticle";
 import FullpageSpinner from "./FullpageSpinner";
 import { localStorageKey, userVerifyURL } from "../utils/constant";
 import NoMatch from "./NoMatch";
+import ErrorBoundry from "./ErrorBoundry";
+import { UserProvider } from "../context/userContext";
 
 class App extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class App extends React.Component {
     };
   }
   fetchData = () => {
-    let storagekey = localStorage[localStorageKey];
+    const storagekey = localStorage[localStorageKey];
     fetch(userVerifyURL, {
       method: "GET",
       headers: {
@@ -85,15 +86,25 @@ class App extends React.Component {
     }
     return (
       <>
-        <Header isLoggedIn={this.state.isLoggedIn} user={this.state.user} />
-        {this.state.isLoggedIn ? (
-          <AuthenticatedApp user={this.state.user} logout={this.logout} />
-        ) : (
-          <UnauthenticatedApp
-            updateUser={this.updateUser}
-            user={this.state.user}
-          />
-        )}
+        <UserProvider
+          value={{
+            data: this.state,
+            updateUser: this.updateUser,
+            handleLogout: this.logout,
+          }}
+        >
+          <ErrorBoundry>
+            <Header isLoggedIn={this.state.isLoggedIn} user={this.state.user} />
+            {this.state.isLoggedIn ? (
+              <AuthenticatedApp user={this.state.user} logout={this.logout} />
+            ) : (
+              <UnauthenticatedApp
+                updateUser={this.updateUser}
+                user={this.state.user}
+              />
+            )}
+          </ErrorBoundry>
+        </UserProvider>
       </>
     );
   }

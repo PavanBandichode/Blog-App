@@ -7,6 +7,7 @@ class CommentBox extends React.Component {
   state = {
     comment: "",
     comments: null,
+    invert: false,
     errors: {
       comment: "",
     },
@@ -14,15 +15,21 @@ class CommentBox extends React.Component {
   componentDidMount() {
     this.fetchComments();
   }
+  componentDidUpdate(preProps, preState) {
+    if (preState.invert !== this.state.invert) {
+      this.fetchComments();
+      console.log("update");
+    }
+  }
 
   handleChange = (event) => {
     let { name, value } = event.target;
-    let errors = { ...this.state.errors };
-    this.setState({ [name]: value, errors });
+
+    this.setState({ [name]: value });
   };
   fetchComments = () => {
     let slug = this.props.params.slug;
-    console.log(`fetch`);
+
     fetch(articlesURL + `/${slug}/comments`)
       .then((res) => {
         if (!res.ok) {
@@ -36,7 +43,6 @@ class CommentBox extends React.Component {
         console.log(comments);
         this.setState({
           comments,
-          comment: "",
         });
       })
       .catch((errors) => console.log(errors));
@@ -64,12 +70,9 @@ class CommentBox extends React.Component {
         return res.json();
       })
       .then(({ comment }) => {
-        this.setState(
-          {
-            comment: "",
-          },
-          this.fetchComments
-        );
+        this.setState({
+          invert: !this.state.invert,
+        });
       })
       .catch((errors) => {
         this.setState({ errors });
@@ -84,24 +87,27 @@ class CommentBox extends React.Component {
         "Content-Type": "application/json",
         authorization: `Token ${this.props.user.token}`,
       },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`can not delete comment`);
-        }
-        return res.json();
-      })
-      .then(({ comment }) => {
-        this.setState(
-          {
-            comment: "",
-          },
-          this.fetchComments
-        );
-      })
-      .catch((errors) => {
-        this.setState({ errors });
-      });
+    }).then((res) => {
+      console.log(res);
+      if (res.ok) {
+        return this.setState({
+          invert: !this.state.invert,
+        });
+      }
+
+      // if (!res.ok) {
+      //   throw new Error(`can not delete comment`);
+      // }
+      // return res.json();
+    });
+    // .then(({ comment }) => {
+    //   this.setState({
+    //     comment: "",
+    //   });
+    // })
+    // .catch((errors) => {
+    //   this.setState({ errors });
+    // });
   };
   render() {
     // let { body } = this.state.errors;
@@ -120,7 +126,13 @@ class CommentBox extends React.Component {
               />
             </fieldset>
             <div className="post-comment flex space-between">
-              <img src={this.props.user.image} alt={this.props.user.username} />
+              <img
+                src={
+                  this.props.user.image ||
+                  `https://static.productionready.io/images/smiley-cyrus.jpg`
+                }
+                alt={this.props.user.username}
+              />
               <button type="submit" onClick={this.handleSubmit}>
                 Post Comment
               </button>

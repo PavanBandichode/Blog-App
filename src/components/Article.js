@@ -43,6 +43,8 @@ class Article extends React.Component {
       },
     })
       .then((res) => {
+        console.log("article is deleted", res, "article");
+        this.props.navigate("/");
         if (!res.ok) {
           throw new Error(`can not delete comment`);
         }
@@ -60,7 +62,6 @@ class Article extends React.Component {
     console.log(article, "article");
     let user = this.props.user;
 
-    // console.log(user, "user");
     if (error) {
       return (
         <center>
@@ -121,9 +122,7 @@ class Article extends React.Component {
             </div>
           </footer>
         ) : (
-          <>
-            <CommentBox user={user} />
-          </>
+          <CommentBox user={user} />
         )}
       </>
     );

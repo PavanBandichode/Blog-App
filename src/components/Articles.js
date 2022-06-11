@@ -5,10 +5,6 @@ import FeedNav from "./FeedNav";
 import { articlesURL } from "../utils/constant";
 
 class Articles extends React.Component {
-  constructor(props) {
-    super(props);
-    this.stae = {};
-  }
   favoriteArticle = (slug) => {
     fetch(articlesURL + `/${slug}/favorite`, {
       method: "POST",

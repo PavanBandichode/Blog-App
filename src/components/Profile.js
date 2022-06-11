@@ -31,7 +31,6 @@ class Profile extends React.Component {
         return data.json();
       })
       .then(({ profile }) => {
-        console.log({ profile }, "fetch");
         this.setState({ profile });
       })
       .catch((error) => console.log(error));
